@@ -1,0 +1,35 @@
+{
+  "name": "calendar-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "debug": "^2.6.9",
+    "dotenv": "^16.0.0",
+    "express": "^4.16.4",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.4",
+    "morgan": "^1.9.1",
+    "nodemon": "^2.0.15",
+    "validator": "^13.7.0"
+  },
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/banjman81/calendar-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/banjman81/calendar-backend/issues"
+  },
+  "homepage": "https://github.com/banjman81/calendar-backend#readme",
+  "description": ""
+}
