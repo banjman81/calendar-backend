@@ -2,6 +2,9 @@ const express = require('express')
 
 const router = express.Router()
 
+const {checkIsEmpty, validateCreateData, validateLoginData, userAuthenticator} = require('../lib/index')
+const {createUser, login, getUserByEmail, deleteUser} = require('./controller/userController')
+
 router.get("/", function(req, res, next){
     res.json({
         success: "Success",
@@ -9,12 +12,9 @@ router.get("/", function(req, res, next){
     })
 })
 
-router.post('/create-user', function(req, res, next){
-    res.json({
-        success: "Success",
-        message: 'create user',
-        payload: req.body
-    })
-})
+router.post('/create-user', checkIsEmpty, validateCreateData, createUser)
+router.post('/login', checkIsEmpty, validateLoginData, login)
+router.get('/getUserByEmail/:email', getUserByEmail)
+router.delete('/delete-user', userAuthenticator, deleteUser)
 
 module.exports =  router;
