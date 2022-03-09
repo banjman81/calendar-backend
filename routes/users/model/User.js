@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true
-        }
+        },
+        comments : [{
+            type : mongoose.Schema.ObjectId,
+            ref: "comment"
+        }]
     },
     {
         timestamps: true
