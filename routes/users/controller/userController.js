@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const User = require('../model/User')
+const Event = require('../../events/model/Event')
 const jwt = require('jsonwebtoken')
 
 const errorHandler = require('../../utils/errorHandler')
@@ -125,9 +126,54 @@ async function deleteUser(req, res){
     }
 }
 
+async function addEvent(req, res){
+    try{
+        const decodedData = res.locals.decodedData
+
+        const foundUser = await User.findOne({email: decodedData.email})
+        const foundEvent = await Event.findById(req.params.id)
+
+        const filteredUserEvent = foundUser.events.filter( event => event._id == req.params.id)
+
+        if(foundEvent.attendees.length >= Number(foundEvent.capacity)){
+            return res.status(500).json({
+                message: 'error',
+                error: "Sorry, this event is full."
+            })
+        }
+
+        if(filteredUserEvent.length > 0){
+            
+            return res.status(500).json({
+                message: 'error',
+                error: "You are already signed up."
+            })
+        }
+
+
+        foundUser.events.push(foundEvent._id)
+        foundEvent.attendees.push(foundUser._id)
+
+        await foundUser.save()
+        await foundEvent.save()
+
+        res.json({
+            message: 'success',
+            payload: foundEvent
+        })
+    }catch(e){
+        return res.status(500).json({
+            message: 'error adding event',
+            error: e.message
+        })
+    }
+    
+}
+
 module.exports = {
     createUser,
     login,
     getUserByEmail,
-    deleteUser
+    deleteUser,
+    addEvent
 }

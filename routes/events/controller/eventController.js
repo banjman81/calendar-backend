@@ -25,7 +25,7 @@ async function createEvent(req, res) {
             host : foundUser._id
         })
 
-        // let savedEvent = await createdEvent.save()
+        let savedEvent = await createdEvent.save()
 
         res.json({
             message: 'success',
