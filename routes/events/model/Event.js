@@ -30,6 +30,10 @@ const eventSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        duration:{
+            type: String,
+            required: true
+        },
         capacity: {
             type: String,
             required: true

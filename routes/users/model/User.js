@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
         comments : [{
             type : mongoose.Schema.ObjectId,
             ref: "comment"
+        }],
+        events: [{
+            type : mongoose.Schema.ObjectId,
+            ref: "event"
         }]
     },
     {

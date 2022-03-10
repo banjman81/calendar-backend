@@ -61,7 +61,7 @@ async function login(req, res) {
                         username: foundUser.username
                     },
                     process.env.JWT_USER_SECRET,
-                    {expiresIn : '1h'}
+                    {expiresIn : '8h'}
 
                 )
 

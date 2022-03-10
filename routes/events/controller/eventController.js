@@ -8,7 +8,7 @@ async function createEvent(req, res) {
     console.log('create event')
     try{
 
-        let {title, eventType, shortDescription, longDescription, location, startDate, endDate, capacity} = req.body
+        let {title, eventType, shortDescription, longDescription, location, startDate, endDate, duration, capacity,} = req.body
 
         const foundUser = await User.findOne({email: decodedData.email})
 
@@ -20,15 +20,16 @@ async function createEvent(req, res) {
             location,
             startDate,
             endDate,
+            duration,
             capacity,
             host : foundUser._id
         })
 
-        let savedEvent = await createdEvent.save()
+        // let savedEvent = await createdEvent.save()
 
         res.json({
             message: 'success',
-            payload: savedEvent
+            payload: createdEvent
         })
 
     }catch(e){
