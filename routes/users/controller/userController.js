@@ -191,10 +191,38 @@ async function addEvent(req, res){
     
 }
 
+async function removeEvent(req, res){
+    try{
+        const decodedData = res.locals.decodedData
+
+        const foundUser = await User.findOne({email: decodedData.email}).populate("events")
+        const foundEvent = await Event.findById(req.params.id).populate('attendees')
+
+        foundUser.events = foundUser.events.filter(event => String(event._id) !== String(foundEvent._id))
+        foundEvent.attendees = foundEvent.attendees.filter(user => String(user._id) !== String(foundUser._id))
+
+        const savedUser = await foundUser.save()
+        const savedEvent = await foundEvent.save()
+
+        res.json({
+            message: "success",
+            user: savedUser.events,
+            event: savedEvent.attendees
+        })
+
+    }catch(e){
+        res.status(500).json({
+            message: "error",
+            error: e.message
+        })
+    }
+}
+
 module.exports = {
     createUser,
     login,
     getUserByEmail,
     deleteUser,
-    addEvent
+    addEvent,
+    removeEvent
 }
