@@ -29,7 +29,7 @@ async function createEvent(req, res) {
 
         res.json({
             message: 'success',
-            payload: createdEvent
+            payload: savedEvent
         })
 
     }catch(e){
@@ -46,9 +46,15 @@ async function deleteEvent(req, res) {
     try{
 
         const foundUser = await User.findOne({email: decodedData.email})
-        const foundEvent = await Event.findById(req.params.id)
+        const foundEvent = await Event.findById(req.params.id).populate("attendees")
 
         if(String(foundUser._id) === String(foundEvent.host._id)){
+
+            foundEvent.attendees.map(async attendee => {
+                attendee.events = attendee.events.filter(event => String(event._id) !== String(foundEvent._id))
+
+                await attendee.save()
+            })
 
             const deletedEvent = await Event.findByIdAndDelete(req.params.id)
 

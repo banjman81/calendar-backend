@@ -172,6 +172,7 @@ async function addEvent(req, res){
 
 
         foundUser.events.push(foundEvent._id)
+        console.log(168)
         foundEvent.attendees.push(foundUser._id)
 
         await foundUser.save()
