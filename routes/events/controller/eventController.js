@@ -40,6 +40,35 @@ async function createEvent(req, res) {
     }
 }
 
+async function deleteEvent(req, res) {
+    
+    const decodedData = res.locals.decodedData
+    try{
+
+        const foundUser = await User.findOne({email: decodedData.email})
+        const foundEvent = await Event.findById(req.params.id)
+
+        if(String(foundUser._id) === String(foundEvent.host._id)){
+
+            const deletedEvent = await Event.findByIdAndDelete(req.params.id)
+
+            res.json({
+                message: "success",
+                payload: deletedEvent
+            })
+        }else{
+            throw({message: "You are not the host of this event."})
+        }
+
+    }catch(e){
+        res.status(500).json({
+            message: 'error',
+            error: e.message
+        })
+    }
+}
+
 module.exports = {
-    createEvent
+    createEvent,
+    deleteEvent
 }

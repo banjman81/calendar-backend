@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken')
 
 const errorHandler = require('../../utils/errorHandler')
 
+const {getNumberOfDays} = require('../../lib/createValidation/validateEventCreateData')
+
 
 async function createUser(req, res){
     try{
@@ -84,7 +86,7 @@ async function login(req, res) {
 
 async function getUserByEmail(req, res){
     try {
-        let foundUser = await User.findOne({email: req.params.email})
+        let foundUser = await User.findOne({email: req.params.email}).populate("events")
         if(!foundUser){
             res.status(500).json({
                 message: 'error',
@@ -96,6 +98,7 @@ async function getUserByEmail(req, res){
                 lastName: foundUser.lastName,
                 username: foundUser.username,
                 email: foundUser.email,
+                events: foundUser.events
             })
         }
     }catch(e){
@@ -130,25 +133,42 @@ async function addEvent(req, res){
     try{
         const decodedData = res.locals.decodedData
 
-        const foundUser = await User.findOne({email: decodedData.email})
+        let validSpot = true
+
+        const foundUser = await User.findOne({email: decodedData.email}).populate("events")
         const foundEvent = await Event.findById(req.params.id)
 
+        foundUser.events.map(event => {
+            if(getNumberOfDays(event.startDate, foundEvent.startDate) == 0 ){
+                return validSpot = false
+            }else{
+                if(getNumberOfDays(event.startDate, foundEvent.startDate) > 0){
+                    if(getNumberOfDays(event.endDate, foundEvent.startDate)< 0){
+                        return validSpot = false
+                    }
+                }
+
+                if(getNumberOfDays(event.startDate, foundEvent.startDate) < 0){
+                    if(getNumberOfDays(foundEvent.endDate, event.startDate) < 0){
+                        return validSpot = false
+                    }
+                }
+            }
+        })
+
         const filteredUserEvent = foundUser.events.filter( event => event._id == req.params.id)
+        if(filteredUserEvent.length > 0){
+            throw({message: "You are already signed up."})
+        }
+        if(!validSpot){
+            throw({message: 'You are already signed up for an event on this day.'})
+        }
 
         if(foundEvent.attendees.length >= Number(foundEvent.capacity)){
-            return res.status(500).json({
-                message: 'error',
-                error: "Sorry, this event is full."
-            })
+            throw({message: "Sorry, this event is full."})
         }
 
-        if(filteredUserEvent.length > 0){
-            
-            return res.status(500).json({
-                message: 'error',
-                error: "You are already signed up."
-            })
-        }
+        
 
 
         foundUser.events.push(foundEvent._id)

@@ -73,5 +73,6 @@ function validateCreateEventData(req, res, next){
 }
 
 module.exports = {
-    validateCreateEventData
+    validateCreateEventData,
+    getNumberOfDays
 }
