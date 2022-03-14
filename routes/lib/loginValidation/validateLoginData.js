@@ -9,6 +9,7 @@ function  validateLoginData(req, res, next){
         errObj.email = ' Please enter a valid email'
     }
     if (Object.keys(errObj).length > 0){
+        console.log(errObj)
         return res.status(500).json({
             message: "error",
             error: errObj

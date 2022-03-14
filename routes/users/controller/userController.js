@@ -35,28 +35,31 @@ async function createUser(req, res){
     catch(e){
         return res.status(500).json({
             message: 'error',
-            error: errorHandler(e)
+            error: e.message
         })
     }
 }
 
 async function login(req, res) {
     const {email, password} = req.body
+    const errObj = {}
     try{
         let foundUser = await User.findOne({email: email})
         if(!foundUser){
+            errObj.email = 'Email does not exist, Please register!'
             res.status(500).json({
-                message: "error",
-                error: 'Email does not exist, Please register!'
-            })
+                    message : 'error',
+                    error: errObj
+                })
         }else{
             let comparedPassword = await bcrypt.compare(password, foundUser.password)
 
             if(!comparedPassword){
+                errObj.password = "Incorrect login information. Please Try again"
                 res.status(500).json({
-                    message : 'error',
-                    error: "Incorrecxt login information. Please Try again"
-                })
+                        message : 'error',
+                        error: errObj
+                    })
             }else{
                 let jwtToken = jwt.sign (
                     {
