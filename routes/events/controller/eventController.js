@@ -6,8 +6,7 @@ async function createEvent(req, res) {
     
     
     const decodedData = res.locals.decodedData
-    console.log('create event')
-    console.log(req.file)
+    console.log(req.body, '-----------------------------------')
     try{
 
         let {title, eventType, shortDescription, longDescription, location, startDate, endDate, duration, capacity, image} = req.body
@@ -28,7 +27,11 @@ async function createEvent(req, res) {
             host : foundUser._id
         })
 
+        
+
         let savedEvent = await createdEvent.save()
+        foundUser.createdEvents.push(savedEvent)
+        await foundUser.save()
 
         res.json({
             message: 'success',

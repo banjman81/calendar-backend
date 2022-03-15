@@ -89,7 +89,7 @@ async function login(req, res) {
 
 async function getUserByEmail(req, res){
     try {
-        let foundUser = await User.findOne({email: req.params.email}).populate("events")
+        let foundUser = await User.findOne({email: req.params.email}).populate("events").populate("createdEvents")
         if(!foundUser){
             res.status(500).json({
                 message: 'error',
@@ -102,7 +102,8 @@ async function getUserByEmail(req, res){
                 lastName: foundUser.lastName,
                 username: foundUser.username,
                 email: foundUser.email,
-                events: foundUser.events
+                events: foundUser.events,
+                createdEvents : foundUser.createdEvents
             })
         }
     }catch(e){
