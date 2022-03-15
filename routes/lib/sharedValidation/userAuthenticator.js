@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function userAuthenticator(req, res, next){
+    console.log("baduser", req.headers.authorization)
     try{
 
         if(req.headers && req.headers.authorization) {
@@ -14,6 +15,7 @@ function userAuthenticator(req, res, next){
 
             next()
         } else{
+            console.log("baduser")
             throw({message: "You do not have permission"})
         }
 
