@@ -97,6 +97,7 @@ async function getUserByEmail(req, res){
             })
         }else{
             res.json({
+                id: foundUser._id,
                 firstName: foundUser.firstName,
                 lastName: foundUser.lastName,
                 username: foundUser.username,

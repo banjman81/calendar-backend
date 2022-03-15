@@ -4,11 +4,13 @@ const Event = require('../model/Event')
 
 async function createEvent(req, res) {
     
+    
     const decodedData = res.locals.decodedData
     console.log('create event')
+    console.log(req.file)
     try{
 
-        let {title, eventType, shortDescription, longDescription, location, startDate, endDate, duration, capacity,} = req.body
+        let {title, eventType, shortDescription, longDescription, location, startDate, endDate, duration, capacity, image} = req.body
 
         const foundUser = await User.findOne({email: decodedData.email})
 
@@ -22,6 +24,7 @@ async function createEvent(req, res) {
             endDate,
             duration,
             capacity,
+            image,
             host : foundUser._id
         })
 
@@ -77,7 +80,7 @@ async function deleteEvent(req, res) {
 async function getAllEvents(req, res) {
     try{
 
-        let allEvents = await Event.find()
+        let allEvents = await Event.find().populate("host")
 
         res.json({
             message: "success",
@@ -92,8 +95,28 @@ async function getAllEvents(req, res) {
     }
 }
 
+async function getOneEvent(req, res) {
+    try{
+        let foundEvent = await Event.findById(req.params.id)
+        .populate('host')
+        .populate('attendees')
+
+        res.json({
+            message: "success",
+            payload: foundEvent
+        })
+
+    }catch(e){
+        res.status(500).json({
+            message: "error",
+            error: e.message
+        })
+    }
+}
+
 module.exports = {
     createEvent,
     deleteEvent,
-    getAllEvents
+    getAllEvents,
+    getOneEvent
 }

@@ -24,6 +24,8 @@ function validateCreateEventData(req, res, next){
     let errObj = {}
     let {title, eventType, shortDescription, longDescription, location, startDate, endDate, capacity} = req.body
 
+    
+    console.log( "location:", location)
     if(title.length < 8){
         errObj.title = "Title is too short. Needs to be 8 characters or more."
     }
@@ -36,7 +38,7 @@ function validateCreateEventData(req, res, next){
     if(longDescription.length < 50){
         errObj.longDescription = "Description is too short. Needs to be 50 characters or more."
     }
-    if(location !==  "remote"){
+    if(location !==  "Remote"){
         if(location.length < 15)
         errObj.location = "Please enter a proper address."
     }

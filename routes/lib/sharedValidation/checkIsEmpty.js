@@ -5,9 +5,12 @@ function checkIsEmpty(req, res, next){
     let errObj = {}
 
     for (let key in body){
-        if(isEmpty(body[key])){
-            errObj[`${key}`] = `${key} cannot be empty`
+        if(key !== "image"){
+            if(isEmpty(body[key])){
+                errObj[`${key}`] = `${key} cannot be empty`
+            }
         }
+        
     }
 
     if(Object.keys(errObj).length > 0){
