@@ -7,8 +7,8 @@ const randomBytes = promisify(crypto.randomBytes)
 
 const region = "us-east-2"
 const bucketName = "banjman-project-app"
-const accessKeyId = "AKIA4NN4JOAXYZSA642O"
-const secretAccessKey = "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"
+const accessKeyId = process.env.AWS_AKEY
+const secretAccessKey = process.env.AWS_SKEY
 
 const s3 = new aws.S3({
     region,
