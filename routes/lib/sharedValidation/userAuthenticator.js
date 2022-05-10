@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function userAuthenticator(req, res, next){
-    console.log("baduser", req.headers.authorization)
     try{
-
         if(req.headers && req.headers.authorization) {
             let rawToken = req.headers.authorization;
 
@@ -12,7 +10,7 @@ function userAuthenticator(req, res, next){
             let decodedToken = jwt.verify(slicedToken, process.env.JWT_USER_SECRET)
 
             res.locals.decodedData = decodedToken
-
+            // console.log("good")
             next()
         } else{
             console.log("baduser")

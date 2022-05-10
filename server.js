@@ -5,7 +5,7 @@ dotenv.config()
 
 const app = require('./app')
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3003
 
 mongoose
     .connect(process.env.MONGODB , {

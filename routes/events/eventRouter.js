@@ -1,5 +1,6 @@
 const express = require('express')
 const multer = require('multer')
+const s3 = require('../../s3')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -35,11 +36,9 @@ const {userAuthenticator, checkIsEmpty, validateCreateEventData} = require('../l
 const {createEvent, deleteEvent, getAllEvents, getOneEvent} = require('./controller/eventController')
 
 router.get('/', getAllEvents)
-router.post('/upload', userAuthenticator,upload.single('image'), 
+router.post('/upload', userAuthenticator ,upload.single('image'), 
 function(req, res, next){
     try{
-        console.log('image' , req.file)
-        console.log('body' , req.body)
         res.send({
             message: 'success'
         })
@@ -53,6 +52,10 @@ function(req, res, next){
 router.post('/create-event', userAuthenticator, checkIsEmpty, validateCreateEventData, createEvent)
 router.delete('/delete-event/:id', userAuthenticator, deleteEvent)
 router.get('/get-event/:id', getOneEvent)
+router.get('/s3url', async (req, res) => {
+    const url = await s3.generateUploadURL()
+    res.send({url})
+})
 
 module.exports = router;
 
